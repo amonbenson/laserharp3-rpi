@@ -5,8 +5,9 @@ import cv2
 
 class Sensor:
     def __init__(self, resolution=(320, 240), framerate=60):
-        self.resolution = resolution
-        self.framerate = framerate
+        # set parameters
+        self.resolution = np.array(resolution).reshape(2)
+        self.framerate = int(framerate)
 
         # setup camera
         self.camera = PiCamera()
