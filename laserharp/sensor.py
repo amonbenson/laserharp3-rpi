@@ -27,9 +27,10 @@ class Sensor:
         self.camera.exposure_compensation = 0
         self.camera.awb_gains = (1, 1)
 
-        # initialize image buffer
+        # initialize buffers
         self.yuv = np.empty((int(self.resolution[1] * 1.5), self.resolution[0]), dtype=np.uint8)
         self.luminance = None
+        self.thresh = None
         self.centers = []
 
     def capture(self):
@@ -38,8 +39,8 @@ class Sensor:
         self.luminance = self.yuv[:self.resolution[1], :]
 
         # preprocess and extract contours
-        thresh = cv2.threshold(self.luminance, 200, 255, cv2.THRESH_BINARY)[1]
-        contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+        self.thresh = cv2.threshold(self.luminance, 200, 255, cv2.THRESH_BINARY)[1]
+        contours = cv2.findContours(self.thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 
         # get the blob centers
         self.centers = []
